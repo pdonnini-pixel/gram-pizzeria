@@ -187,7 +187,8 @@
   }
 
   function applicaMenu(items) {
-    var root = document.querySelector(".menu-groups"); if (!root) return;
+    // Solo nella pagina menu: in home la .menu-groups è un'anteprima statica curata.
+    var root = document.querySelector('[data-page="menu"] .menu-groups'); if (!root) return;
     var gruppi = {};
     items.forEach(function (p) { (gruppi[p.gruppo] = gruppi[p.gruppo] || []).push(p); });
     var ordine = ORDINE_MENU.filter(function (g) { return gruppi[g]; });
