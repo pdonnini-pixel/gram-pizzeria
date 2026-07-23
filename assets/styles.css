@@ -1,0 +1,277 @@
+/* ================================================================
+   GRAM — sistema derivato dal marchio: crema su nero caldo,
+   didone ad alto contrasto, la riga che taglia la parola.
+   ================================================================ */
+:root{
+  --nero:#262523; --nero-2:#33312D;
+  --crema:#E9E6DA; --carta:#F3F1E8;
+  --fumo:#6B675E; --rame:#A2622C; --rame-lux:#C98A45; --linea:#CBC5B5;
+  --w:1180px; --pad:clamp(1.25rem,5vw,3rem); --gap:clamp(3.25rem,8vw,7rem);
+  --headh:62px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:hidden;max-width:100%}
+p,li,dd,summary,.desc,.lede{overflow-wrap:break-word}
+.hero-grid>*,.two>*,.menu-groups>*,.row2>*,.form>*,.field>*,.spec li>*,.cards>*{min-width:0}
+input,select,textarea{max-width:100%}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+body{margin:0;background:var(--carta);color:var(--nero);font-family:"Karla",system-ui,sans-serif;font-size:clamp(1rem,.96rem + .2vw,1.08rem);line-height:1.62;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:var(--w);margin-inline:auto;padding-inline:var(--pad)}
+
+/* ---------- marchio (maschera con canale alfa) ---------- */
+.logo{display:block;width:var(--lw,110px);aspect-ratio:660/264;background-color:currentColor;
+  -webkit-mask:url("logo.png") center/contain no-repeat;mask:url("logo.png") center/contain no-repeat}
+/* FIRMA: la riga che nel marchio taglia GRAM prosegue nella pagina */
+.brandline{display:flex;align-items:flex-start}
+.brandline .logo{flex:none}
+.brandline .rule{flex:1;height:1px;background:currentColor;opacity:.38;margin-top:calc(var(--lw) * .162)}
+
+/* ---------- tipografia ---------- */
+h1,h2,h3{font-family:"Bodoni Moda",Georgia,serif;font-weight:500;margin:0;line-height:1.04;letter-spacing:-.012em}
+h2{font-size:clamp(1.95rem,1.25rem + 3.2vw,3.5rem)}
+h3{font-size:clamp(1.25rem,1.08rem + .85vw,1.7rem);line-height:1.16}
+p{margin:0 0 1.1em}
+.lede{font-size:clamp(1.04rem,1rem + .4vw,1.2rem);max-width:56ch;color:var(--fumo)}
+.eyebrow{font-family:"Space Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:var(--rame);margin:0 0 1.1rem;display:flex;align-items:center;gap:.85rem}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--linea)}
+
+/* ---------- header + navigazione ---------- */
+/* NB: niente backdrop-filter qui. Un ancestor con backdrop-filter diventa
+   blocco contenitore per i figli position:fixed e romperebbe l'overlay del menu. */
+.top{position:sticky;top:0;z-index:80;background:var(--carta);border-bottom:1px solid var(--linea)}
+.top .bar{display:flex;align-items:center;gap:1rem;height:var(--headh);max-width:var(--w);margin-inline:auto;padding-inline:var(--pad)}
+.top .logo{--lw:100px;color:var(--nero)}
+.burger{margin-left:auto;font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--linea);color:var(--nero);padding:.45rem .7rem;border-radius:3px;cursor:pointer}
+.nav a{text-decoration:none}
+[data-go]{cursor:pointer}
+@media (max-width:899px){
+  .scrim{position:fixed;inset:var(--headh) 0 0;background:rgba(38,37,35,.5);z-index:74;
+         opacity:0;pointer-events:none;transition:opacity .25s ease}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .nav{position:fixed;top:var(--headh);left:0;right:0;z-index:76;
+       background:var(--nero);color:var(--crema);display:block;
+       padding:1.3rem var(--pad) 1.5rem;border-bottom:1px solid rgba(233,230,218,.22);
+       box-shadow:0 22px 40px -26px rgba(0,0,0,.8);
+       transform:translateY(-10px);opacity:0;visibility:hidden;
+       transition:opacity .24s ease,transform .24s ease,visibility .24s}
+  .nav.open{transform:none;opacity:1;visibility:visible}
+  .nav a{display:block;font-family:"Bodoni Moda",serif;font-size:1.32rem;line-height:1.25;
+         padding:.62rem 0;border-bottom:1px solid rgba(233,230,218,.14)}
+  .nav a[aria-current="page"]{color:var(--rame-lux)}
+  .nav-lab{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;
+           color:var(--rame-lux);margin:0 0 .55rem}
+  .nav-foot{display:flex;flex-wrap:wrap;gap:.5rem 1.3rem;margin-top:1.15rem;padding-top:1rem;
+            border-top:1px solid rgba(233,230,218,.14)}
+  .nav-foot a{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.08em;
+              padding:0;border:0;color:rgba(233,230,218,.78);display:inline}
+  body.navopen{overflow:hidden}
+}
+@media (min-width:900px){ .scrim{display:none} }
+@media (min-width:900px){
+  .burger{display:none}
+  .nav{margin-left:auto;display:flex;gap:1.7rem}
+  .nav-lab,.nav-foot{display:none}
+  .nav a{font-size:.87rem;padding-bottom:2px;border-bottom:1px solid transparent}
+  .nav a:hover{border-bottom-color:var(--rame)}
+  .nav a[aria-current="page"]{border-bottom-color:var(--nero)}
+}
+.langs{display:flex;gap:.15rem;align-items:center;margin-left:.65rem}
+@media (min-width:900px){.langs{margin-left:1.6rem}}
+.langs button{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.12em;background:none;border:1px solid transparent;color:var(--fumo);padding:.3rem .42rem;cursor:pointer;border-radius:2px}
+.langs button[aria-pressed="true"]{color:var(--nero);border-color:var(--linea);background:#fff}
+
+/* ---------- bottoni ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;font-family:"Karla",sans-serif;font-size:.95rem;font-weight:600;padding:.92rem 1.65rem;text-decoration:none;cursor:pointer;border:1px solid var(--nero);background:var(--nero);color:var(--crema);border-radius:5px;transition:transform .18s ease,background .18s ease,color .18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn--ghost{background:transparent;color:var(--nero)}
+.btn--ghost:hover{background:var(--nero);color:var(--crema)}
+.on-dark .btn{background:var(--crema);border-color:var(--crema);color:var(--nero)}
+.on-dark .btn--ghost{background:transparent;color:var(--crema);border-color:rgba(233,230,218,.42)}
+.on-dark .btn--ghost:hover{background:var(--crema);color:var(--nero)}
+.btn--wide{width:100%}
+:focus-visible{outline:2px solid var(--rame-lux);outline-offset:3px}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem}
+
+/* ---------- viste ---------- */
+.block{padding-block:var(--gap)}
+.band{background:var(--crema)}
+.dark{background:var(--nero);color:var(--crema)}
+.dark .eyebrow{color:var(--rame-lux)}
+.dark .eyebrow::after{background:rgba(233,230,218,.24)}
+.dark .lede{color:rgba(233,230,218,.72)}
+.two{display:grid;gap:clamp(2rem,4vw,4rem)}
+@media (min-width:860px){.two{grid-template-columns:1fr 1fr}}
+.head{max-width:62ch;margin-bottom:clamp(2rem,4vw,3.25rem)}
+.head h2{margin-bottom:1.05rem}
+
+/* ================= HERO ================= */
+.hero{background:var(--nero);color:var(--crema);padding-block:clamp(2.5rem,6vw,4.5rem) 0}
+.hero-grid{display:grid;gap:clamp(2rem,5vw,4rem);align-items:end}
+@media (min-width:940px){.hero-grid{grid-template-columns:1.02fr .98fr}}
+.hero .brandline{--lw:clamp(200px,42vw,390px);margin-bottom:1.6rem}
+.place{font-family:"Space Mono",monospace;font-size:clamp(.6rem,.5rem + .45vw,.72rem);letter-spacing:clamp(.08em,.02em + .5vw,.19em);text-transform:uppercase;color:rgba(233,230,218,.6);margin:0 0 1.9rem;line-height:1.8}
+.thesis{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:clamp(1.45rem,1.1rem + 1.7vw,2.3rem);line-height:1.18;max-width:17ch;margin:0 0 1.4rem}
+.hero .lede{color:rgba(233,230,218,.74)}
+.hero .cta{margin-bottom:clamp(2.25rem,5vw,0rem)}
+.portrait{margin:0;align-self:end}
+.portrait img{width:100%;height:auto;border-radius:3px 3px 0 0;filter:contrast(1.03) saturate(.96)}
+.portrait figcaption{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,230,218,.55);padding:.8rem 0 1.2rem;display:flex;gap:.7rem;align-items:baseline}
+.portrait figcaption::before{content:"";width:26px;height:1px;background:var(--rame-lux);flex:none;transform:translateY(-.3em)}
+
+/* ================= STASERA ================= */
+.tonight{border-bottom:1px solid var(--linea);background:var(--crema)}
+.tonight .inner{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem 1.35rem;padding-block:.95rem;font-family:"Space Mono",monospace;font-size:.75rem;letter-spacing:.05em}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--fumo)}
+.dot.open{background:#5F7A4B;box-shadow:0 0 0 4px rgba(95,122,75,.2)}
+.dot.shut{background:#A8483F}
+.tonight .sep{opacity:.35}
+.tonight a{color:var(--rame);text-underline-offset:3px}
+
+/* ---------- scheda impasto ---------- */
+.spec{background:var(--nero);color:var(--crema);padding:clamp(1.4rem,3.5vw,2.2rem);border-radius:4px;box-shadow:0 24px 55px -32px rgba(38,37,35,.7)}
+.spec h3{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--rame-lux);margin:0 0 .3rem;font-weight:400}
+.spec .sub{font-size:.76rem;color:rgba(233,230,218,.5);margin:0 0 1.3rem;font-family:"Space Mono",monospace}
+.spec ul{list-style:none;margin:0;padding:0}
+.spec li{display:flex;align-items:baseline;gap:.55rem;font-family:"Space Mono",monospace;font-size:clamp(.74rem,.68rem + .25vw,.85rem);padding:.4rem 0}
+.spec .k{color:rgba(233,230,218,.84)}
+@media (min-width:440px){.spec .k{white-space:nowrap}}
+.spec .dots{flex:1 1 1rem;border-bottom:1px dotted rgba(233,230,218,.3);transform:translateY(-.3em);min-width:1rem}
+.spec .v{color:var(--rame-lux);font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;flex:none}
+.spec li.rule{display:block;height:1px;padding:0;background:rgba(233,230,218,.2);margin:.75rem 0}
+.spec .total .k{color:var(--crema)}
+.spec .total .v{font-size:1.02rem}
+.spec footer{margin-top:1.3rem;padding-top:.95rem;border-top:1px solid rgba(233,230,218,.2);font-size:.75rem;color:rgba(233,230,218,.58);line-height:1.55}
+
+/* ================= MENU ================= */
+.menu-groups{display:grid;gap:clamp(2.25rem,5vw,3.75rem)}
+@media (min-width:900px){.menu-groups{grid-template-columns:1fr 1fr;gap:clamp(2.5rem,4vw,4.5rem)}}
+.group h3{margin-bottom:.3rem}
+.group .note{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rame);margin:0 0 1.35rem}
+.item{padding:.92rem 0;border-bottom:1px solid var(--linea)}
+.item:first-of-type{border-top:1px solid var(--linea)}
+.item .line{display:flex;align-items:baseline;gap:.6rem}
+.item .name{font-family:"Bodoni Moda",serif;font-size:clamp(1.05rem,1rem + .3vw,1.18rem);font-weight:500;min-width:0}
+@media (min-width:400px){.item .name{white-space:nowrap}}
+.item .dots{flex:1 1 1.5rem;border-bottom:1px dotted var(--linea);transform:translateY(-.32em);min-width:1.5rem;align-self:flex-end;margin-bottom:.4em}
+.item .price{font-family:"Space Mono",monospace;font-size:.92rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none;align-self:flex-end}
+.item .desc{margin:.26rem 0 0;font-size:.9rem;color:var(--fumo);line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:.32rem;margin-top:.42rem}
+.tag{font-family:"Space Mono",monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--linea);padding:.14rem .4rem;border-radius:2px;color:var(--fumo)}
+.tag.veg{border-color:#7E8C67;color:#5E6B4A}
+.menu-foot{margin-top:clamp(2rem,5vw,3rem);padding-top:1.35rem;border-top:2px solid var(--nero);display:flex;flex-wrap:wrap;gap:.85rem 2.3rem;font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.05em;color:var(--fumo)}
+
+/* ================= SCHEDE / GRIGLIE ================= */
+.cards{display:grid;gap:clamp(1.25rem,3vw,2rem);grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.person{margin:0}
+.person img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px}
+.person .nm{font-family:"Bodoni Moda",serif;font-size:1.22rem;margin:.8rem 0 .1rem}
+.person .rl{font-family:"Space Mono",monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rame);margin:0 0 .45rem}
+.person .bio{font-size:.88rem;color:var(--fumo);margin:0;line-height:1.5}
+.dark .person .bio{color:rgba(233,230,218,.66)}
+
+/* segnaposto foto = brief di scatto, non un buco */
+.shot{position:relative;border:1px dashed var(--linea);border-radius:4px;background:
+  repeating-linear-gradient(135deg,rgba(38,37,35,.035) 0 10px,transparent 10px 20px);
+  display:flex;flex-direction:column;justify-content:flex-end;gap:.35rem;padding:.95rem;color:var(--fumo)}
+.shot.sq{aspect-ratio:1/1}
+.shot.wide{aspect-ratio:4/3}
+.shot .lab{font-family:"Space Mono",monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rame)}
+.shot .brief{font-size:.8rem;line-height:1.42;margin:0}
+.dark .shot{border-color:rgba(233,230,218,.28);color:rgba(233,230,218,.62);background:repeating-linear-gradient(135deg,rgba(233,230,218,.05) 0 10px,transparent 10px 20px)}
+.dark .shot .lab{color:var(--rame-lux)}
+
+/* riquadro idea / offerta */
+.pitch{border:1px solid var(--linea);border-radius:5px;padding:clamp(1.25rem,3vw,1.9rem);background:var(--carta)}
+.dark .pitch{border-color:rgba(233,230,218,.24);background:rgba(233,230,218,.05)}
+.pitch h3{margin-bottom:.55rem}
+.pitch p{margin:0 0 .9em;font-size:.94rem;color:var(--fumo)}
+.dark .pitch p{color:rgba(233,230,218,.7)}
+.pitch p:last-child{margin-bottom:0}
+
+/* ================= LISTE A PUNTINI ================= */
+.hours{list-style:none;margin:0 0 1.8rem;padding:0}
+.hours li{display:flex;align-items:baseline;gap:.6rem;font-family:"Space Mono",monospace;font-size:.81rem;padding:.44rem 0;border-bottom:1px solid var(--linea)}
+.dark .hours li{border-color:rgba(233,230,218,.2)}
+.hours .dots{flex:1 1 1rem;border-bottom:1px dotted var(--linea);transform:translateY(-.3em);min-width:1rem}
+.dark .hours .dots{border-color:rgba(233,230,218,.3)}
+.hours .v{font-variant-numeric:tabular-nums;flex:none}
+.hours li.off .v{color:#A8483F}
+.hours li.now{color:var(--rame)}
+.dark .hours li.now{color:var(--rame-lux)}
+
+/* ================= FORM ================= */
+.form{display:grid;gap:1rem}
+.field{display:flex;flex-direction:column;gap:.4rem}
+/* Il selettore data di iOS ha una larghezza minima propria: sotto i 560px
+   non sta in mezza colonna e sborda sul campo accanto. Si impila. */
+.row2{display:grid;gap:1rem;grid-template-columns:1fr}
+@media (min-width:560px){.row2{grid-template-columns:1fr 1fr}}
+label{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.17em;text-transform:uppercase;color:var(--rame-lux)}
+input,select,textarea{font-family:"Karla",sans-serif;font-size:1rem;color:var(--crema);background:rgba(233,230,218,.07);border:1px solid rgba(233,230,218,.3);padding:.8rem .9rem;border-radius:3px;width:100%;min-width:0;display:block}
+input[type="date"]{-webkit-appearance:none;appearance:none;text-align:left;min-height:3.05rem}
+input[type="date"]::-webkit-date-and-time-value{text-align:left}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.55}
+select{appearance:none;-webkit-appearance:none;padding-right:2.7rem;text-overflow:ellipsis;background-image:linear-gradient(45deg,transparent 50%,var(--rame-lux) 50%),linear-gradient(135deg,var(--rame-lux) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat}
+select option{background:var(--nero);color:var(--crema)}
+input::placeholder,textarea::placeholder{color:rgba(233,230,218,.4)}
+textarea{resize:vertical;min-height:76px}
+.form .hint{font-size:.8rem;color:rgba(233,230,218,.55);margin:0}
+
+/* ================= INFO / FAQ ================= */
+.contact{margin:0;padding:0;display:grid;gap:1.3rem}
+.contact dt{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.17em;text-transform:uppercase;color:var(--rame);margin-bottom:.2rem}
+.contact dd{margin:0;font-size:1.02rem}
+.map{border:1px solid var(--linea);border-radius:4px;overflow:hidden;aspect-ratio:4/3;background:var(--crema)}
+.map iframe{width:100%;height:100%;border:0;display:block;filter:grayscale(.4) contrast(1.05)}
+.faq{max-width:68ch}
+details{border-bottom:1px solid var(--linea)}
+details summary{cursor:pointer;list-style:none;padding:1.05rem 0;font-family:"Bodoni Moda",serif;font-size:1.08rem;display:flex;align-items:center;gap:1rem}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";margin-left:auto;font-family:"Space Mono",monospace;color:var(--rame);font-size:1.05rem;flex:none}
+details[open] summary::after{content:"–"}
+details .a{padding:0 0 1.15rem;color:var(--fumo);font-size:.94rem;max-width:60ch}
+
+/* ================= FOOTER ================= */
+footer.site{background:var(--nero);color:rgba(233,230,218,.72);padding-block:clamp(3rem,6vw,4.5rem) 6rem;font-size:.86rem}
+footer.site .brandline{--lw:clamp(145px,25vw,220px);color:var(--crema);margin-bottom:2.4rem}
+footer.site .cols{display:grid;gap:2.4rem}
+@media (min-width:720px){footer.site .cols{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){footer.site .cols{grid-template-columns:minmax(230px,1fr) 1fr .8fr .72fr;gap:2.6rem}}
+footer.site .map{border:1px solid rgba(233,230,218,.22);border-radius:4px;overflow:hidden;aspect-ratio:1/1;background:var(--nero-2);margin-bottom:.9rem}
+footer.site .map iframe{width:100%;height:100%;border:0;display:block;filter:grayscale(.55) contrast(1.1) brightness(.92)}
+footer.site address{font-style:normal;line-height:1.65;margin:0 0 1.6rem}
+footer.site .hours{margin:0 0 .9rem}
+footer.site .hours li{border-color:rgba(233,230,218,.16);font-size:.76rem;padding:.34rem 0}
+footer.site .hours .dots{border-bottom-color:rgba(233,230,218,.28)}
+footer.site .hours li.off .v{color:#C98A45}
+footer.site .hours li.now{color:var(--crema)}
+footer.site .hours li.now .v{color:var(--rame-lux)}
+footer.site .micro{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.06em;line-height:1.6;color:rgba(233,230,218,.5);margin:0}
+footer.site .btn{padding:.6rem 1rem;font-size:.82rem}
+footer.site h4{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rame-lux);margin:0 0 .8rem;font-weight:400}
+footer.site a{color:var(--crema);text-decoration:none;text-underline-offset:3px}
+footer.site a:hover{text-decoration:underline}
+footer.site ul{list-style:none;margin:0;padding:0;display:grid;gap:.48rem}
+footer.site .fine{margin-top:2.3rem;padding-top:1.35rem;border-top:1px solid rgba(233,230,218,.2);font-size:.73rem;color:rgba(233,230,218,.45);line-height:1.6}
+
+/* ================= dock mobile: compare solo dopo l'hero ================= */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;gap:.5rem;
+  padding:.6rem var(--pad) calc(.6rem + env(safe-area-inset-bottom));
+  background:rgba(38,37,35,.97);backdrop-filter:blur(10px);border-top:1px solid rgba(233,230,218,.18);
+  transform:translateY(105%);transition:transform .28s ease;pointer-events:none}
+.dock.show{transform:none;pointer-events:auto}
+.dock .btn{flex:1;padding:.78rem 1rem;font-size:.9rem}
+@media (min-width:900px){.dock{display:none}}
+@media (max-width:899px){footer.site{padding-bottom:7rem}}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+.skip{position:absolute;left:-9999px;top:0;background:var(--nero);color:var(--crema);padding:.75rem 1rem;z-index:100}
+.skip:focus{left:0}
+
+.nf{min-height:52vh;display:flex;flex-direction:column;justify-content:center}
