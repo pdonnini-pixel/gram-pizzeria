@@ -82,19 +82,24 @@
       each('[data-content="coperto"]', function (el) { el.textContent = c.locale.coperto; });
     }
 
-    // impasto (scheda numeri della home)
-    if (c.home && c.home.impasto) {
-      var root = document.querySelector(".spec-list") || document.querySelector('[data-content="impasto"]');
-      if (root) {
-        root.innerHTML = "";
-        c.home.impasto.forEach(function (r) {
-          var d = document.createElement("div"); d.className = "spec-item";
-          var v = document.createElement("div"); v.className = "spec-v"; v.textContent = (r.valore || "") + (r.unita ? " " + r.unita : "");
-          var l = document.createElement("div"); l.className = "spec-l";
-          var lab = r.label && (r.label[lang] || r.label.it) || ""; l.textContent = lab;
-          d.appendChild(v); d.appendChild(l); root.appendChild(d);
-        });
-      }
+    // impasto: aggiorna in place le righe esistenti, preservando stile,
+    // animazione dei numeri (data-count) e traduzioni (data-it/en/de).
+    if (c.home && c.home.impasto && c.home.impasto.length) {
+      var righe = [];
+      Array.prototype.forEach.call(document.querySelectorAll('[data-content="impasto"] li'), function (li) {
+        if (li.querySelector(".k") && li.querySelector(".v")) righe.push(li);
+      });
+      c.home.impasto.forEach(function (r, i) {
+        var li = righe[i]; if (!li) return;
+        testo(li.querySelector(".k"), r.label);
+        var v = li.querySelector(".v");
+        var suff = r.unita ? (" " + r.unita) : (v.getAttribute("data-suffix") || "");
+        if (r.valore != null && r.valore !== "") {
+          v.setAttribute("data-count", String(r.valore));
+          v.setAttribute("data-suffix", suff);
+          v.textContent = r.valore + suff;
+        }
+      });
     }
 
     if (c.orari) applicaOrari(c.orari, c.chiusure);
