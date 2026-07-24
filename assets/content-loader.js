@@ -59,7 +59,7 @@
     // etichette di navigazione e pulsanti
     if (c.etichette) {
       if (c.etichette.nav) Object.keys(c.etichette.nav).forEach(function (k) {
-        each('[data-nav-label="' + k + '"]', function (el) { testo(el, c.etichette.nav[k]); });
+        each('[data-nav-label="' + k + '"], [data-nav="' + k + '"]', function (el) { testo(el, c.etichette.nav[k]); });
       });
       if (c.etichette.bottoni) Object.keys(c.etichette.bottoni).forEach(function (k) {
         each('[data-btn-label="' + k + '"]', function (el) { testo(el, c.etichette.bottoni[k]); });
