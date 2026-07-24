@@ -47,6 +47,8 @@
     if (c.home) {
       each('[data-content="frase"]', function (el) { testo(el, c.home.frase); });
       each('[data-content="intro"]', function (el) { testo(el, c.home.intro); });
+      each('[data-content="cucina"]', function (el) { testo(el, c.home.cucina); });
+      each('[data-content="didascalia"]', function (el) { testo(el, c.home.didascalia); });
     }
     if (c.asporto) each('[data-content="asporto"]', function (el) { testo(el, c.asporto); });
     if (c.privacy) each('[data-content="privacy"]', function (el) { testo(el, c.privacy); });
@@ -105,7 +107,7 @@
       });
     }
 
-    if (c.orari) applicaOrari(c.orari, c.chiusure);
+    if (c.orari) { applicaOrari(c.orari, c.chiusure); if (window.gramPaintStatus) window.gramPaintStatus(); }
     if (c.staff) applicaStaff(c.staff);
     if (c.cilento) applicaCilento(c.cilento);
     if (c.faq) applicaFaq(c.faq);

@@ -6,7 +6,7 @@
 
   var STR = {
     it: {
-      open: "Aperto adesso", shut: "Chiuso adesso", soon: "Apre alle 20:00",
+      open: "Aperto adesso", shut: "Chiuso adesso", soon: "Apre alle 20:00", soonPre: "Apre alle ",
       mon: "Oggi chiuso, ci vediamo domani", today: "aggiornato oggi",
       nav: "Menu", navClose: "Chiudi",
       msg: function (d, t, p, w, n, x) {
@@ -15,7 +15,7 @@
       }
     },
     en: {
-      open: "Open now", shut: "Closed now", soon: "Opens at 20:00",
+      open: "Open now", shut: "Closed now", soon: "Opens at 20:00", soonPre: "Opens at ",
       mon: "Closed today, see you tomorrow", today: "updated today",
       nav: "Menu", navClose: "Close",
       msg: function (d, t, p, w, n, x) {
@@ -24,7 +24,7 @@
       }
     },
     de: {
-      open: "Jetzt geöffnet", shut: "Jetzt geschlossen", soon: "Öffnet um 20:00 Uhr",
+      open: "Jetzt geöffnet", shut: "Jetzt geschlossen", soon: "Öffnet um 20:00 Uhr", soonPre: "Öffnet um ",
       mon: "Heute geschlossen, bis morgen", today: "heute aktualisiert",
       nav: "Menü", navClose: "Schließen",
       msg: function (d, t, p, w, n, x) {
@@ -113,19 +113,41 @@
     var map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
     return { day: map[o.weekday], h: parseInt(o.hour, 10), d: o.day, mo: o.month };
   }
+  // Legge apertura/chiusura di OGGI dalla lista orari (che il pannello
+  // aggiorna via Supabase), così lo stato segue gli orari reali.
+  function orariDiOggi(day) {
+    var li = document.querySelector('#hoursList li[data-day="' + day + '"]');
+    if (!li) return null;
+    if (li.classList.contains("off")) return { chiuso: true };
+    var v = li.querySelector(".v"); if (!v) return null;
+    var m = v.textContent.match(/(\d{1,2})[:.]?(\d{2})?\s*[–-]\s*(\d{1,2})/);
+    if (!m) return null;
+    return { chiuso: false, apre: parseInt(m[1], 10), chiude: parseInt(m[3], 10), apreStr: v.textContent.split(/[–-]/)[0].trim() };
+  }
   function paintStatus() {
     var dot = document.getElementById("statusDot");
     var txt = document.getElementById("statusText");
     var t = romeParts(), s = STR[lang];
     if (dot && txt) {
-      var isOpen = t.day !== 1 && t.h >= 20;
+      var o = orariDiOggi(t.day), isOpen, label;
+      if (o && !o.chiuso) {
+        var chiude = o.chiude === 0 ? 24 : o.chiude; // 00:00 = mezzanotte
+        isOpen = t.h >= o.apre && t.h < chiude;
+        label = isOpen ? s.open : (t.h < o.apre ? ((s.soonPre || "") + o.apreStr) : s.shut);
+      } else if (o && o.chiuso) {
+        isOpen = false; label = s.mon;
+      } else { // fallback: comportamento originale se la lista non è leggibile
+        isOpen = t.day !== 1 && t.h >= 20;
+        label = isOpen ? s.open : (t.day === 1 ? s.mon : (t.h < 20 ? s.soon : s.shut));
+      }
       dot.className = "dot " + (isOpen ? "open" : "shut");
-      txt.textContent = isOpen ? s.open : (t.day === 1 ? s.mon : (t.h < 20 ? s.soon : s.shut));
+      txt.textContent = label;
     }
     document.querySelectorAll("#hoursList li").forEach(function (li) {
       li.classList.toggle("now", parseInt(li.dataset.day, 10) === t.day);
     });
   }
+  window.gramPaintStatus = paintStatus; // il content-loader lo richiama dopo aver aggiornato gli orari
   function paintDate() {
     var el = document.getElementById("specDate"); if (!el) return;
     var t = romeParts();
