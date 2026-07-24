@@ -146,48 +146,36 @@
   }
 
   function applicaStaff(staff) {
-    var root = document.querySelector(".staff-grid"); if (!root) return;
-    root.innerHTML = "";
-    staff.forEach(function (s) {
-      if (!s.nome && !s.foto) return;
-      var card = document.createElement("div"); card.className = "staff-card";
-      var ph = document.createElement("div"); ph.className = "staff-photo";
-      if (s.foto) ph.style.backgroundImage = "url(" + s.foto + ")";
-      var nm = document.createElement("div"); nm.className = "staff-name"; nm.textContent = s.nome || "";
-      var rl = document.createElement("div"); rl.className = "staff-role";
-      rl.textContent = s.ruolo && (s.ruolo[lang] || s.ruolo.it) || "";
-      var bio = document.createElement("p"); bio.className = "staff-bio";
-      bio.textContent = s.bio && (s.bio[lang] || s.bio.it) || "";
-      card.appendChild(ph); card.appendChild(nm); card.appendChild(rl); card.appendChild(bio);
-      root.appendChild(card);
+    // aggiorna in place le schede persona esistenti (.person): nome, ruolo, bio.
+    var cards = document.querySelectorAll('[data-content="staff"] .person');
+    staff.forEach(function (s, i) {
+      var card = cards[i]; if (!card) return;
+      var nm = card.querySelector(".nm"); if (nm && s.nome) nm.textContent = s.nome;
+      testo(card.querySelector(".rl"), s.ruolo);
+      testo(card.querySelector(".bio"), s.bio);
     });
   }
 
   function applicaCilento(c) {
     var i = document.querySelector('[data-content="cilento.intro"]'); if (i) testo(i, c.intro);
     var pq = document.querySelector('[data-content="cilento.perche"]'); if (pq) testo(pq, c.perche);
-    var root = document.querySelector(".cilento-luoghi"); if (root && c.luoghi) {
-      root.innerHTML = "";
-      c.luoghi.forEach(function (l) {
-        var row = document.createElement("div"); row.className = "luogo";
-        var n = document.createElement("span"); n.className = "luogo-nome";
-        n.textContent = l.nome && (l.nome[lang] || l.nome.it) || "";
-        var t = document.createElement("span"); t.className = "luogo-tempo"; t.textContent = l.tempo || "";
-        row.appendChild(n); row.appendChild(t); root.appendChild(row);
+    if (c.luoghi && c.luoghi.length) {
+      var lis = document.querySelectorAll('[data-content="cilento.luoghi"] li');
+      c.luoghi.forEach(function (l, idx) {
+        var li = lis[idx]; if (!li) return;
+        testo(li.querySelector("span:not(.dots):not(.v)"), l.nome);
+        var v = li.querySelector(".v"); if (v && l.tempo) v.textContent = l.tempo;
       });
     }
   }
 
   function applicaFaq(faq) {
-    var root = document.querySelector(".faq"); if (!root) return;
-    root.innerHTML = "";
-    faq.forEach(function (f) {
-      var d = document.createElement("details");
-      var sm = document.createElement("summary");
-      sm.textContent = f.d && (f.d[lang] || f.d.it) || "";
-      var a = document.createElement("div"); a.className = "a";
-      a.textContent = f.r && (f.r[lang] || f.r.it) || "";
-      d.appendChild(sm); d.appendChild(a); root.appendChild(d);
+    // aggiorna in place le voci FAQ esistenti (details/summary/.a), preservando i18n.
+    var dets = document.querySelectorAll('[data-content="faq"] details');
+    faq.forEach(function (f, idx) {
+      var d = dets[idx]; if (!d) return;
+      testo(d.querySelector("summary"), f.d);
+      testo(d.querySelector(".a"), f.r);
     });
   }
 
