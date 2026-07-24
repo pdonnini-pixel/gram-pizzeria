@@ -79,6 +79,18 @@
       });
       each('[data-content="indirizzo"]', function (el) { el.textContent = c.contatti.indirizzo; });
       each('[data-content="instagram"]', function (el) { el.textContent = c.contatti.instagram; });
+      // social: lista gestibile dal pannello (nome + url). Ne genera i link.
+      if (c.contatti.social && c.contatti.social.length) {
+        each('[data-content="social"]', function (el) {
+          el.innerHTML = "";
+          c.contatti.social.forEach(function (s) {
+            if (!s.nome || !s.url) return;
+            var a = document.createElement("a");
+            a.href = s.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = s.nome;
+            el.appendChild(a);
+          });
+        });
+      }
       aggiornaMappa(c.contatti.lat, c.contatti.lng);
     }
     if (c.locale) {
