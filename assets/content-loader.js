@@ -28,20 +28,17 @@
   })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function (rows) { if (rows && rows[0] && rows[0].value) applica(rows[0].value); })
-    .catch(function () { /* silenzio: resta il contenuto statico */ });
+    .catch(function () { /* silenzio: resta il contenuto statico */ })
+    // Rivela i campi modificabili (nascosti finché non arriva il valore vero,
+    // così non si vede mai il testo precedente prima dell'aggiornamento).
+    .finally(function () { document.documentElement.classList.remove("gram-hydrating"); });
 
   function testo(el, obj) {
     if (!el || !obj) return;
     if (obj.it) el.setAttribute("data-it", obj.it);
     if (obj.en) el.setAttribute("data-en", obj.en);
     if (obj.de) el.setAttribute("data-de", obj.de);
-    var t = obj[lang] || obj.it;
-    if (!t || t === el.textContent) return;
-    // Il testo cambia rispetto allo statico: dissolvenza breve, così
-    // l'aggiornamento da Supabase sembra voluto e non un lampeggio/errore.
-    el.style.transition = "opacity .22s ease";
-    el.style.opacity = "0";
-    setTimeout(function () { el.textContent = t; el.style.opacity = "1"; }, 130);
+    var t = obj[lang] || obj.it; if (t) el.textContent = t;
   }
   function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
 
